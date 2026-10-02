@@ -39,12 +39,12 @@ for (const pid of round.turnOrder) engine.confirmCardViewed(pid);
 // Son casus yakalanana kadar tur DISCUSSION'a dönmeye devam etmeli;
 // son casus yakalandığında RESULT'a (INNOCENTS) geçmeli.
 for (let round_i = 0; round_i < blacks.length; round_i++) {
-  for (let i = 0; i < round.activeOrder.length; i++) engine.advanceDiscussionTurn();
+  for (let i = 0; i < round.turnOrder.length; i++) engine.advanceDiscussionTurn();
   assert(round.phase === RoundPhase.VOTING, `Döngü ${round_i + 1}: VOTING fazına geçildi`);
 
   const target = blacks[round_i];
-  const decoy = round.activeOrder.find((id: string) => id !== target)!;
-  for (const voterId of round.activeOrder) {
+  const decoy = round.turnOrder.find((id: string) => id !== target)!;
+  for (const voterId of round.turnOrder) {
     engine.submitVote(voterId, voterId === target ? decoy : target);
   }
   assert(round.eliminatedPlayerId === target, `Döngü ${round_i + 1}: doğru BLACK (${target}) en çok oyu aldı`);
