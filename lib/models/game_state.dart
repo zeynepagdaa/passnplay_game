@@ -1,13 +1,4 @@
-/// game_state.dart
-/// -----------------------------------------------------------------------
-/// GameEngine'in yönettiği state machine'in veri şekli.
-///
-/// Faz akışı (Karma Mod devam kuralı dahil):
-///   DEALING -> DISCUSSION -> VOTING -> REVEAL
-///     -> (BLACK yakalandı, hâlâ gizli casus var) -> DISCUSSION (döngü)
-///     -> (BLACK yakalandı, tüm casuslar bulundu) -> RESULT
-///     -> (WHITE yakalandı) -> WHITE_GUESS -> RESULT
-///     -> (MAIN yanlışlıkla elendi) -> RESULT
+
 
 import 'card_assignment.dart';
 import 'word_pack.dart';

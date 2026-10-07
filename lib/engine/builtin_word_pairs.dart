@@ -1,19 +1,3 @@
-/// builtin_word_pairs.dart
-/// -----------------------------------------------------------------------
-/// TEK BLOK dahili kelime kütüphanesi.
-///
-/// KURAL: Bu liste kategorilere BÖLÜNMEMİŞTİR — hepsi tek bir düz dizi
-/// içinde karışık olarak durur (mutfak, hayvan, meslek, doğa, teknoloji,
-/// spor vb. iç içe). wordSelection.buildUnifiedWordPool zaten bu
-/// paketleri tek havuzda eritir; ama kaynak veri seviyesinde bile
-/// kategori ayrımı olmaması isteniyor, o yüzden burada da hiçbir alt
-/// grup/anahtar kullanılmadı.
-///
-/// KAPSAM NOTU: Nihai hedef (>=1000 çift) için bu, DOLDURULMASI GEREKEN
-/// bir BAŞLANGIÇ setidir (~160 çift). Format tamamen düzdür — 1000'e
-/// çıkarmak için aynı `[AnaKelime, SiyahKelime]` satırlarından eklemek
-/// yeterlidir, başka hiçbir kod değişikliği gerekmez. Kalan ~840 çifti
-/// üretmek istersen bir sonraki adımda toplu halde ekleyebilirim.
 
 const List<List<String>> builtinWordPairsRaw = [
   ['Kahve', 'Çay'],

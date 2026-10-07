@@ -129,7 +129,7 @@ void main() {
     final pool = buildUnifiedWordPool([pack], [defaultPackId]);
     final engine = GameEngine(
       players,
-      GameSettings(playerCount: 4, allowMixedMode: false, selectedPackIds: [defaultPackId]),
+      const GameSettings(playerCount: 4, allowMixedMode: false, selectedPackIds: [defaultPackId]),
       pool,
     );
 
@@ -169,7 +169,7 @@ void main() {
     do {
       engine = GameEngine(
         players,
-        GameSettings(playerCount: 10, selectedPackIds: [defaultPackId]),
+        const GameSettings(playerCount: 10, selectedPackIds: [defaultPackId]),
         pool,
       );
       round = engine.startNewRound(spyPreference: SpyModePreference.mixed);

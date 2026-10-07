@@ -1,10 +1,4 @@
-/// game_provider.dart
-/// -----------------------------------------------------------------------
-/// UI katmanının GameEngine ile konuştuğu TEK nokta. GameEngine kendi
-/// içinde mutasyonla çalıştığı için (bkz. game_engine.dart), bu sınıf
-/// her aksiyon sonrası `notifyListeners()` çağırarak Flutter widget
-/// ağacını güncel tutar. UI ekranları doğrudan GameEngine'e erişmez —
-/// sadece bu provider üzerinden.
+
 
 import 'dart:convert';
 import 'package:flutter/foundation.dart';

@@ -1,26 +1,25 @@
-/// game_engine.dart
-/// -----------------------------------------------------------------------
-/// Oyunun merkezi state machine'i. Tüm faz geçişleri burada yönetilir:
-///
-///   DEALING -> DISCUSSION -> VOTING -> REVEAL
-///     -> (BLACK yakalandı, hâlâ gizli casus var) -> DISCUSSION (yeni döngü)
-///     -> (BLACK yakalandı, tüm casuslar bulundu) -> RESULT (INNOCENTS)
-///     -> (WHITE yakalandı) -> WHITE_GUESS -> RESULT
-///     -> (MAIN yanlışlıkla elendi) -> RESULT (SPIES)
-///
-/// KARMA MOD DEVAM KURALI (kullanıcı onaylı tasarım kararı):
-/// Bir turda hem Siyah hem Beyaz kart varsa ve oylamada sadece biri
-/// yakalanırsa, tur BİTMEZ. Yakalanan casus `activeOrder`dan çıkarılır
-/// (artık oy kullanamaz/oylanamaz) ve tartışma/oylama, hâlâ gizli casus
-/// kalmayana ya da bir masum yanlışlıkla elenene kadar devam eder.
-///
-/// PUANLAMA NOTU: SPIES kazandığında, bu turda DAHA ÖNCE (Karma Mod
-/// döngüsünde) yakalanmış bir casus artık "bulunmuş" sayılır ve puan
-/// almaz — sadece sona kadar tespit edilemeyen casuslar ödüllendirilir.
-///
-/// HATA YÖNETİMİ: Yanlış fazda çağrılan metotlar açık bir StateError
-/// fırlatır (UI'ın state machine kurallarını yanlışlıkla ihlal etmesini
-/// erken yakalamak için).
+
+
+//Oyunun merkezi state machine'i. Tüm faz geçişleri burada yönetilir:
+//
+//  DEALING -> DISCUSSION -> VOTING -> REVEAL
+//    -> (BLACK yakalandı, hâlâ gizli casus var) -> DISCUSSION (yeni döngü)
+//     -> (BLACK yakalandı, tüm casuslar bulundu) -> RESULT (INNOCENTS)
+//   -> (WHITE yakalandı) -> WHITE_GUESS -> RESULT
+//   -> (MAIN yanlışlıkla elendi) -> RESULT (SPIES)
+//
+//KARMA MOD DEVAM KURALI (kullanıcı onaylı tasarım kararı):
+// Bir turda hem Siyah hem Beyaz kart varsa ve oylamada sadece biri
+// yakalanırsa, tur BİTMEZ. Yakalanan casus `activeOrder`dan çıkarılır
+// (artık oy kullanamaz/oylanamaz) ve tartışma/oylama, hâlâ gizli casus
+// kalmayana ya da bir masum yanlışlıkla elenene kadar devam eder.
+//
+// PUANLAMA NOTU: SPIES kazandığında, bu turda DAHA ÖNCE (Karma Mod
+// döngüsünde) yakalanmış bir casus artık "bulunmuş" sayılır ve puan
+// almaz — sadece sona kadar tespit edilemeyen casuslar ödüllendirilir.
+//
+//HATA YÖNETİMİ: Yanlış fazda çağrılan metotlar açık bir StateError
+// fırlatır (UI'ın state machine kurallarını yanlışlıkla ihlal etmesini erken yakalamak için).
 
 import '../models/player.dart';
 import '../models/word_pack.dart';

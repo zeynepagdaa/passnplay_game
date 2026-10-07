@@ -1,10 +1,9 @@
-/// turn_order.dart
-/// -----------------------------------------------------------------------
-/// "Dinamik Tur Sıralaması" kuralı:
-///  - Tur 1: sıralama tamamen rastgele (kura).
-///  - Tur >=2: kart bakma/konuşma sırası en düşük puana sahip oyuncudan
-///    başlar (ascending score). Eşit skorlarda sıralama, önceki turun
-///    sırasına göre stabil tutulur (adil bir tie-break sağlamak için).
+
+// "Dinamik Tur Sıralaması" kuralı:
+//  - Tur 1: sıralama tamamen rastgele (kura).
+//  - Tur >=2: kart bakma/konuşma sırası en düşük puana sahip oyuncudan
+//   başlar (ascending score). Eşit skorlarda sıralama, önceki turun
+//   sırasına göre stabil tutulur (adil bir tie-break sağlamak için).
 
 import '../models/player.dart';
 import 'spy_distribution.dart';

@@ -6,11 +6,11 @@ class GameCard extends StatelessWidget {
   final VoidCallback onConfirm;
 
   const GameCard({
-    Key? key,
+    super.key,
     required this.playerName,
-    required this.word,
+    this.word,
     required this.onConfirm,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

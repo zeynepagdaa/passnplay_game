@@ -1,7 +1,4 @@
-/// player.dart
-/// -----------------------------------------------------------------------
-/// Oyuncu modeli. GameEngine ve turnOrder bu sınıfa güvenir.
-/// (TypeScript prototipinden [Player.ts] birebir taşınmıştır.)
+
 
 class Player {
   final String id;

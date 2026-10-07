@@ -1,7 +1,6 @@
-/// word_selection.dart
-/// -----------------------------------------------------------------------
-/// Seçilen paketlerden (default + custom) TEK BİR birleşik havuz oluşturup
-/// her tur için tekrarsız (aynı oyun session'ı içinde) bir WordPair seçer.
+
+// Seçilen paketlerden (default + custom) TEK BİR birleşik havuz oluşturup
+//her tur için tekrarsız (aynı oyun session'ı içinde) bir WordPair seçer.
 
 import '../models/word_pack.dart';
 import 'spy_distribution.dart';

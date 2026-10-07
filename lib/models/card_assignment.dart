@@ -1,13 +1,4 @@
-/// card_assignment.dart
-/// -----------------------------------------------------------------------
-/// Bir oyuncunun bir turdaki kart atamasını temsil eder.
-///
-/// KRİTİK UI KURALI: MAIN ve BLACK atamalarının `word` alanı HER ZAMAN
-/// dolu bir string'dir; sadece değer farklıdır. UI katmanı bu iki kart
-/// türü için AYNI ekran widget'ını kullanmalı, aralarında hiçbir görsel
-/// fark olmamalıdır — aksi halde Siyah Kart sahibi kendi rolünü tahmin
-/// edebilir. Sadece `cardType == CardType.white` durumunda `word == null`
-/// olur ve ayrı bir "Beyaz Kart" ekranı gösterilir.
+
 
 enum CardType { main, black, white }
 

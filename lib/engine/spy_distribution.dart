@@ -1,15 +1,14 @@
-/// spy_distribution.dart
-/// -----------------------------------------------------------------------
-/// "Casus Sayısı Sınırı & Karma Mod" kuralının tek doğru kaynağı.
-///
-/// KURAL (verilen formül, birebir):
-///   maxSpies = (playerCount * 0.30).floor(), en az 1.
-///
-/// MÜHENDİSLİK NOTU: n=6 için (6*0.30).floor() = 1 sonucunu verir; yani
-/// "6 oyuncudan itibaren birden fazla casus / karma mod" ifadesi ancak
-/// n>=7'de matematiksel olarak mümkün hale gelir ((7*0.30).floor()=2).
-/// Bu kasıtlı bir tasarım kararıdır, TypeScript prototipinde de
-/// dokümante edilmiştir — formül değiştirilmemelidir.
+
+// "Casus Sayısı Sınırı & Karma Mod" kuralının tek doğru kaynağı.
+//
+// KURAL (verilen formül, birebir):
+//   maxSpies = (playerCount * 0.30).floor(), en az 1.
+//
+// n=6 için (6*0.30).floor() = 1 sonucunu verir; yani
+// "6 oyuncudan itibaren birden fazla casus / karma mod" ifadesi ancak
+// n>=7'de matematiksel olarak mümkün hale gelir ((7*0.30).floor()=2).
+// Bu kasıtlı bir tasarım kararıdır, TypeScript prototipinde de
+// dokümante edilmiştir — formül değiştirilmemelidir.
 
 import 'dart:math';
 import '../models/card_assignment.dart';
