@@ -76,10 +76,10 @@ class ResultScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: bannerColor,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: badgeColor.withOpacity(0.5)),
+                  border: Border.all(color: badgeColor.withValues(alpha: 0.5)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.02),
+                      color: Colors.black.withValues(alpha: 0.02),
                       offset: const Offset(0, 4),
                       blurRadius: 10,
                     ),
@@ -228,7 +228,7 @@ class ResultScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: isLeader
                                   ? const Color(0xFFFFD1DC) // Lider için pastel pembe
-                                  : const Color(0xFFE8E5DF).withOpacity(0.5),
+                                  : const Color(0xFFE8E5DF).withValues(alpha: 0.5),
                               shape: BoxShape.circle,
                             ),
                             child: Text(

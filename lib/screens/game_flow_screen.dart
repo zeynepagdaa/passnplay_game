@@ -75,7 +75,7 @@ class _InitialRoundStartView extends StatelessWidget {
               border: Border.all(color: const Color(0xFFE8E5DF)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.03),
+                  color: Colors.black.withValues(alpha: 0.03),
                   offset: const Offset(0, 8),
                   blurRadius: 18,
                 ),

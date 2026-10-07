@@ -72,12 +72,12 @@ class _WhiteGuessScreenState extends State<WhiteGuessScreen> {
                   color: const Color(0xFFFDFBF7),
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(
-                    color: const Color(0xFFB19CD9).withOpacity(0.4),
+                    color: const Color(0xFFB19CD9).withValues(alpha: 0.4),
                     width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
+                      color: Colors.black.withValues(alpha: 0.04),
                       offset: const Offset(0, 8),
                       blurRadius: 18,
                     ),

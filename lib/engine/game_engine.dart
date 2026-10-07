@@ -228,6 +228,19 @@ class GameEngine {
     return winner;
   }
 
+  /// UI'da tüm oylar tek ekranda girildiyse oylamayı sonlandırıp REVEAL fazına geçirir.
+  void resolveVotingResult() {
+    _assertPhase(RoundPhase.voting);
+    final round = getCurrentRound();
+
+    if (round.votes.isEmpty) {
+      throw StateError('Henüz hiç oy kullanılmadı.');
+    }
+
+    round.eliminatedPlayerId = _tallyVotes(round.votes, round.activeOrder);
+    round.phase = RoundPhase.reveal;
+  }
+
   // -----------------------------------------------------------------
   // 5) REVEAL FAZI — oylanan oyuncunun kartı açığa çıkar
   // -----------------------------------------------------------------

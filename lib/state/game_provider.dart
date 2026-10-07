@@ -16,7 +16,7 @@ import '../models/game_state.dart';
 import '../engine/game_engine.dart';
 import '../engine/spy_distribution.dart';
 import '../engine/word_selection.dart';
-import '../data/builtin_word_pack.dart';
+import '../engine/builtin_word_pack.dart';
 
 const String _customPacksPrefsKey = 'custom_word_packs_v1';
 
@@ -34,6 +34,12 @@ class GameProvider extends ChangeNotifier {
     _builtinPack = buildBuiltinWordPack();
     _selectedPackIds.add(_builtinPack.id);
     _loadCustomPacksFromDisk();
+  }
+
+  void resolveVotingResult() {
+    if (_engine == null) return;
+    _engine!.resolveVotingResult();
+    notifyListeners();
   }
 
   // ---------------------------------------------------------------

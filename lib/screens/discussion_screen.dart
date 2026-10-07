@@ -50,7 +50,7 @@ class DiscussionScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFAEC6CF).withOpacity(0.35), // Pastel mavi rozet
+                      color: const Color(0xFFAEC6CF).withValues(alpha: 0.35), // Pastel mavi rozet
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -77,7 +77,7 @@ class DiscussionScreen extends StatelessWidget {
                   border: Border.all(color: const Color(0xFFE8E5DF)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
+                      color: Colors.black.withValues(alpha: 0.04),
                       offset: const Offset(0, 6),
                       blurRadius: 16,
                     ),

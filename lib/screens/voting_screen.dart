@@ -45,7 +45,7 @@ class VotingScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFB7B2).withOpacity(0.35), // Pastel somon rozet
+                      color: const Color(0xFFFFB7B2).withValues(alpha: 0.35), // Pastel somon rozet
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -68,7 +68,7 @@ class VotingScreen extends StatelessWidget {
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFD1DC).withOpacity(0.5), // Pastel pembe
+                    color: const Color(0xFFFFD1DC).withValues(alpha: 0.5), // Pastel pembe
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: const Color(0xFFFFD1DC)),
                   ),
@@ -130,7 +130,7 @@ class VotingScreen extends StatelessWidget {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.02),
+                            color: Colors.black.withValues(alpha: 0.02),
                             offset: const Offset(0, 3),
                             blurRadius: 8,
                           ),
@@ -199,7 +199,7 @@ class VotingScreen extends StatelessWidget {
                       ),
                       elevation: 0,
                     ),
-                    onPressed: () => provider.engine?.resolveVotingResult(),
+                    onPressed: () => provider.resolveVotingResult(),
                     child: const Text(
                       'Oylamayı Tamamla • Kartı Aç',
                       style: TextStyle(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/card_assignment.dart';
 import '../state/game_provider.dart';
 import 'game_card.dart';
 
@@ -92,7 +91,7 @@ class _DealingScreenState extends State<DealingScreen> {
         border: Border.all(color: const Color(0xFFE8E5DF)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             offset: const Offset(0, 6),
             blurRadius: 16,
           ),

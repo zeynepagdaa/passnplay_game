@@ -58,7 +58,7 @@ class _SetupScreenState extends State<SetupScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFAEC6CF).withOpacity(0.35), // Pastel mavi rozet
+                      color: const Color(0xFFAEC6CF).withValues(alpha: 0.35), // Pastel mavi rozet
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
@@ -83,7 +83,7 @@ class _SetupScreenState extends State<SetupScreen> {
                   border: Border.all(color: const Color(0xFFE8E5DF)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.02),
+                      color: Colors.black.withValues(alpha: 0.02),
                       offset: const Offset(0, 3),
                       blurRadius: 8,
                     ),
@@ -182,8 +182,8 @@ class _SetupScreenState extends State<SetupScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
                   color: hasEnoughPlayers
-                      ? const Color(0xFFE8E5DF).withOpacity(0.5)
-                      : const Color(0xFFFFD1DC).withOpacity(0.4),
+                      ? const Color(0xFFE8E5DF).withValues(alpha: 0.5)
+                      : const Color(0xFFFFD1DC).withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(

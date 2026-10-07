@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'state/game_provider.dart';
 import 'screens/setup_screen.dart';
 
+
 void main() {
   runApp(const CasusOyunuApp());
 }
