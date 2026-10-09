@@ -1,11 +1,4 @@
-/// word_pack.dart
-/// -----------------------------------------------------------------------
-/// Kelime çifti (Ana Kelime + Siyah Kelime) ve paket modeli.
-///
-/// ÖNEMLİ: WordPack sadece DEPOLAMA/ORGANİZASYON birimidir (dahili paket,
-/// kullanıcı paketi vb.). Oyun sırasında wordSelection.buildUnifiedWordPool
-/// bu paketleri TEK BİR havuzda birleştirir — paket kimliği seçim
-/// aşamasından sonra anlamını yitirir (tek blok kuralı).
+
 
 class WordPair {
   final String id;
