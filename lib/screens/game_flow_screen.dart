@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../models/game_state.dart';
 import '../state/game_provider.dart';
@@ -10,9 +11,6 @@ import 'reveal_screen.dart';
 import 'white_guess_screen.dart';
 import 'result_screen.dart';
 
-/// Oyunun ana durum yönlendiricisi (Finite State Router):
-/// `provider.currentRound.phase` değerini dinleyerek ilgili ekranı çizer.
-/// Ekranlar arası geçişler yumuşak bir sayfa geçiş animasyonu (AnimatedSwitcher) ile sağlanır.
 class GameFlowScreen extends StatelessWidget {
   const GameFlowScreen({super.key});
 
@@ -37,7 +35,7 @@ class GameFlowScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F0EB), // Proje genelindeki pastel krem zemin
+      backgroundColor: const Color(0xFF1A1A24),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 280),
         switchInCurve: Curves.easeInOut,
@@ -54,7 +52,6 @@ class GameFlowScreen extends StatelessWidget {
   }
 }
 
-/// Henüz tur başlamamışsa gösterilen pastel karşılama ve başlatma görünümü.
 class _InitialRoundStartView extends StatelessWidget {
   const _InitialRoundStartView();
 
@@ -70,12 +67,15 @@ class _InitialRoundStartView extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
             decoration: BoxDecoration(
-              color: const Color(0xFFFDFBF7),
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0xFFE8E5DF)),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
+                width: 1.5,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
+                  color: Colors.black.withValues(alpha: 0.2),
                   offset: const Offset(0, 8),
                   blurRadius: 18,
                 ),
@@ -85,32 +85,35 @@ class _InitialRoundStartView extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 76,
-                  height: 76,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFDCD0FF), // Pastel lila
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
-                  child: const Center(
-                    child: Text('🎲', style: TextStyle(fontSize: 36)),
+                  child: Center(
+                    child: Icon(
+                      Icons.casino_rounded,
+                      size: 42,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Oyun Hazır!',
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF2C3E50),
+                Text(
+                  'OYUN HAZIR!',
+                  style: GoogleFonts.bungee(
+                    fontSize: 24,
+                    color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 const Text(
                   'Kelimeler ve roller belirlenmeye hazır.\nİlk turu başlatmak için dokunun.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF7F8C8D),
+                    fontSize: 15,
+                    color: Colors.white70,
                     height: 1.4,
                   ),
                 ),
@@ -119,21 +122,18 @@ class _InitialRoundStartView extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF77DD77), // Pastel yeşil
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       elevation: 0,
                     ),
                     onPressed: () => provider.startNewRound(),
-                    child: const Text(
-                      'İlk Turu Başlat',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Text(
+                      'İLK TURU BAŞLAT',
+                      style: GoogleFonts.bungee(fontSize: 16),
                     ),
                   ),
                 ),

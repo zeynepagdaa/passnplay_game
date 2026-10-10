@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../models/word_pack.dart';
 import '../state/game_provider.dart';
@@ -12,85 +13,54 @@ class WordPackManagerScreen extends StatelessWidget {
     final provider = context.watch<GameProvider>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F0EB), // Pastel krem arka plan
+      backgroundColor: const Color(0xFF1A1A24),
+      appBar: AppBar(
+        title: const Text('KELİME PAKETLERİ'),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: Color(0xFF00E5FF)),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: TextButton.icon(
+              style: TextButton.styleFrom(
+                backgroundColor: const Color(0xFF00E5FF).withValues(alpha: 0.15),
+                foregroundColor: const Color(0xFF00E5FF),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              icon: const Icon(Icons.add_rounded, size: 18),
+              label: Text('YENİ', style: GoogleFonts.bungee(fontSize: 12)),
+              onPressed: () => _showCreatePackDialog(context, provider),
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: ListView(
             children: [
-              // Üst Navigasyon ve Başlık Çubuğu
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                            size: 20, color: Color(0xFF2C3E50)),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      const SizedBox(width: 4),
-                      const Text(
-                        'Kelime Paketleri',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF2C3E50),
-                        ),
-                      ),
-                    ],
-                  ),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFB19CD9), // Pastel lila
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      elevation: 0,
+              _PackCard(pack: provider.builtinPack, provider: provider),
+              if (provider.customPacks.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
+                  child: Text(
+                    'ÖZEL PAKETLER',
+                    style: GoogleFonts.bungee(
+                      fontSize: 12,
+                      letterSpacing: 1.1,
+                      color: const Color(0xFFFFD600),
                     ),
-                    icon: const Icon(Icons.add_rounded, size: 20),
-                    label: const Text(
-                      'Yeni Paket',
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () => _showCreatePackDialog(context, provider),
                   ),
-                ],
-              ),
-              const SizedBox(height: 14),
-
-              // Paket Listesi
-              Expanded(
-                child: ListView(
-                  children: [
-                    // Dahili Paket Kartı
-                    _PackCard(pack: provider.builtinPack, provider: provider),
-
-                    if (provider.customPacks.isNotEmpty) ...[
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 4),
-                        child: Text(
-                          'ÖZEL PAKETLER',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.1,
-                            color: Color(0xFF95A5A6),
-                          ),
-                        ),
-                      ),
-                      for (final pack in provider.customPacks)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: _PackCard(pack: pack, provider: provider),
-                        ),
-                    ],
-                  ],
                 ),
-              ),
+                for (final pack in provider.customPacks)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: _PackCard(pack: pack, provider: provider),
+                  ),
+              ],
             ],
           ),
         ),
@@ -103,33 +73,35 @@ class WordPackManagerScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => Dialog(
-        backgroundColor: const Color(0xFFFDFBF7),
+        backgroundColor: const Color(0xFF232332),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
-          padding: const EdgeInsets.all(22),
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Yeni Paket Oluştur',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF2C3E50),
+              Text(
+                'YENİ PAKET OLUŞTUR',
+                style: GoogleFonts.bungee(
+                  fontSize: 16,
+                  color: const Color(0xFF00E5FF),
                 ),
               ),
               const SizedBox(height: 14),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF2F0EB),
+                  color: const Color(0xFF1A1A24),
                   borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: Colors.white12),
                 ),
                 child: TextField(
                   controller: controller,
+                  style: const TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
                     hintText: 'Paket adı girin...',
+                    hintStyle: TextStyle(color: Colors.white38),
                     border: InputBorder.none,
                   ),
                 ),
@@ -140,16 +112,14 @@ class WordPackManagerScreen extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('İptal', style: TextStyle(color: Color(0xFF7F8C8D))),
+                    child: const Text('İPTAL', style: TextStyle(color: Colors.white60)),
                   ),
                   const SizedBox(width: 8),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF77DD77), // Pastel yeşil
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
+                      backgroundColor: const Color(0xFF00E5FF),
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       elevation: 0,
                     ),
                     onPressed: () {
@@ -158,14 +128,14 @@ class WordPackManagerScreen extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(error),
-                            backgroundColor: const Color(0xFFFFB7B2),
+                            backgroundColor: const Color(0xFFFF3366),
                           ),
                         );
                         return;
                       }
                       Navigator.pop(context);
                     },
-                    child: const Text('Oluştur'),
+                    child: Text('OLUŞTUR', style: GoogleFonts.bungee(fontSize: 12)),
                   ),
                 ],
               ),
@@ -189,27 +159,20 @@ class _PackCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFFDFBF7),
+        color: const Color(0xFF232332),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: isSelected ? const Color(0xFFAEC6CF) : const Color(0xFFE8E5DF),
+          color: isSelected ? const Color(0xFF00E5FF) : Colors.white10,
           width: isSelected ? 1.5 : 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            offset: const Offset(0, 4),
-            blurRadius: 10,
-          ),
-        ],
       ),
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
           leading: Checkbox(
-            activeColor: const Color(0xFF77DD77),
-            checkColor: Colors.white,
+            activeColor: const Color(0xFF00E5FF),
+            checkColor: Colors.black,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             value: isSelected,
             onChanged: (v) => provider.togglePackSelected(pack.id, v ?? false),
@@ -219,35 +182,33 @@ class _PackCard extends StatelessWidget {
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF2C3E50),
+              color: Colors.white,
             ),
           ),
           subtitle: Text(
             '${pack.pairs.length} kelime çifti • ${pack.isEditable ? 'Özel' : 'Dahili (Salt Okunur)'}',
-            style: const TextStyle(fontSize: 12, color: Color(0xFF7F8C8D)),
+            style: const TextStyle(fontSize: 12, color: Colors.white60),
           ),
           trailing: pack.isEditable
               ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.add_circle_outline_rounded,
-                          color: Color(0xFF77DD77)),
+                      icon: const Icon(Icons.add_circle_outline_rounded, color: Color(0xFF00E5FF)),
                       onPressed: () => _showAddPairDialog(context),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.delete_outline_rounded,
-                          color: Color(0xFFFFB7B2)),
+                      icon: const Icon(Icons.delete_outline_rounded, color: Color(0xFFFF3366)),
                       onPressed: () => provider.deleteCustomPack(pack.id),
                     ),
                   ],
                 )
-              : const Icon(Icons.lock_outline_rounded, size: 18, color: Color(0xFFBDC3C7)),
+              : const Icon(Icons.lock_outline_rounded, size: 18, color: Colors.white30),
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: const BoxDecoration(
-                color: Color(0xFFF2F0EB),
+                color: Color(0xFF1A1A24),
                 borderRadius: BorderRadius.vertical(bottom: Radius.circular(18)),
               ),
               child: Column(
@@ -257,7 +218,7 @@ class _PackCard extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFDFBF7),
+                        color: const Color(0xFF232332),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
@@ -267,28 +228,25 @@ class _PackCard extends StatelessWidget {
                               pair.mainWord,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF2C3E50),
+                                color: Colors.white,
                               ),
                             ),
                           ),
-                          const Icon(Icons.arrow_forward_rounded,
-                              size: 14, color: Color(0xFF95A5A6)),
+                          const Icon(Icons.arrow_forward_rounded, size: 14, color: Colors.white38),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               pair.spyWord,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF8C5363),
+                                color: Color(0xFFFF3366),
                               ),
                             ),
                           ),
                           if (pack.isEditable)
                             GestureDetector(
-                              onTap: () =>
-                                  provider.removeWordPairFromPack(pack.id, pair.id),
-                              child: const Icon(Icons.close_rounded,
-                                  size: 16, color: Color(0xFFFFB7B2)),
+                              onTap: () => provider.removeWordPairFromPack(pack.id, pair.id),
+                              child: const Icon(Icons.close_rounded, size: 16, color: Color(0xFFFF3366)),
                             ),
                         ],
                       ),
@@ -310,33 +268,35 @@ class _PackCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => Dialog(
-        backgroundColor: const Color(0xFFFDFBF7),
+        backgroundColor: const Color(0xFF232332),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
-          padding: const EdgeInsets.all(22),
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Kelime Çifti Ekle',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF2C3E50),
+              Text(
+                'KELİME ÇİFTİ EKLE',
+                style: GoogleFonts.bungee(
+                  fontSize: 16,
+                  color: const Color(0xFFFFD600),
                 ),
               ),
               const SizedBox(height: 14),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF2F0EB),
+                  color: const Color(0xFF1A1A24),
                   borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: Colors.white12),
                 ),
                 child: TextField(
                   controller: mainCtrl,
+                  style: const TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
                     hintText: 'Ana Kelime (Masumlar)',
+                    hintStyle: TextStyle(color: Colors.white38),
                     border: InputBorder.none,
                   ),
                 ),
@@ -345,13 +305,16 @@ class _PackCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF2F0EB),
+                  color: const Color(0xFF1A1A24),
                   borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: Colors.white12),
                 ),
                 child: TextField(
                   controller: spyCtrl,
+                  style: const TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
                     hintText: 'Siyah Kelime (Çağrışımlı Casus)',
+                    hintStyle: TextStyle(color: Colors.white38),
                     border: InputBorder.none,
                   ),
                 ),
@@ -362,16 +325,14 @@ class _PackCard extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('İptal', style: TextStyle(color: Color(0xFF7F8C8D))),
+                    child: const Text('İPTAL', style: TextStyle(color: Colors.white60)),
                   ),
                   const SizedBox(width: 8),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF77DD77),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
+                      backgroundColor: const Color(0xFF00E5FF),
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       elevation: 0,
                     ),
                     onPressed: () {
@@ -381,14 +342,14 @@ class _PackCard extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(error),
-                            backgroundColor: const Color(0xFFFFB7B2),
+                            backgroundColor: const Color(0xFFFF3366),
                           ),
                         );
                         return;
                       }
                       Navigator.pop(context);
                     },
-                    child: const Text('Ekle'),
+                    child: Text('EKLE', style: GoogleFonts.bungee(fontSize: 12)),
                   ),
                 ],
               ),

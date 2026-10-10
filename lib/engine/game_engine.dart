@@ -33,13 +33,14 @@ import 'word_selection.dart';
 const int scoreInnocentWin = 1; // Masumlar kazanınca her masum +1
 const int scoreSpyWin = 2; // Casus(lar) kazanınca (sona kadar gizli kalan) her casus +2
 const int scoreWhiteSoloWin = 3; // Beyaz kart tek başına kazanınca +3
-
+//Siyah kart, beyaz kart, karışık tercihi
+enum SpyMode { blackOnly, whiteOnly, mixed }
 class GameEngine {
   late final GameState _state;
   final Map<String, Player> _players;
   final List<WordPair> _wordPool;
   final Set<String> _usedPairIds = {};
-
+  
   GameEngine(List<Player> players, GameSettings settings, List<WordPair> wordPool)
       : _players = {for (final p in players) p.id: p},
         _wordPool = wordPool {
@@ -48,7 +49,7 @@ class GameEngine {
       players: players.map((p) => p.id).toList(),
     );
   }
-
+  
   GameState getState() => _state;
 
   Player getPlayer(String playerId) {

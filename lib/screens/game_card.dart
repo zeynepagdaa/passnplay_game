@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GameCard extends StatelessWidget {
   final String playerName;
@@ -14,20 +15,25 @@ class GameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // word null ise Beyaz Kart'tır, değilse kelimenin kendisini gösterir.
-    final displayWord = word ?? 'BEYAZ KART';
+    final isWhiteCard = word == null;
+    final displayWord = isWhiteCard ? 'BEYAZ KART' : word!;
 
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFFFDFBF7), // Pastel krem arka plan
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE8E5DF)),
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: isWhiteCard
+              ? Theme.of(context).colorScheme.error
+              : Theme.of(context).colorScheme.primary,
+          width: 2,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            offset: const Offset(0, 4),
-            blurRadius: 10,
+            color: Colors.black.withValues(alpha: 0.3),
+            offset: const Offset(0, 8),
+            blurRadius: 18,
           ),
         ],
       ),
@@ -38,59 +44,64 @@ class GameCard extends StatelessWidget {
             '$playerName, senin kelimen:',
             style: const TextStyle(
               fontSize: 18,
-              color: Color(0xFF7B7B7B),
-              fontWeight: FontWeight.w500,
+              color: Colors.white70,
+              fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 20),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
+            padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 24),
             decoration: BoxDecoration(
-              color: const Color(0xFFAEC6CF), // Pastel mavi kelime kutusu
-              borderRadius: BorderRadius.circular(15),
+              color: const Color(0xFF1A1A24),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: isWhiteCard
+                    ? Theme.of(context).colorScheme.error.withValues(alpha: 0.5)
+                    : Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+              ),
             ),
             child: Text(
               displayWord,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: GoogleFonts.bungee(
                 fontSize: 28,
-                color: Color(0xFF2C3E50),
-                fontWeight: FontWeight.bold,
+                color: isWhiteCard
+                    ? Theme.of(context).colorScheme.error
+                    : Theme.of(context).colorScheme.secondary,
                 letterSpacing: 1.5,
               ),
             ),
           ),
           const SizedBox(height: 20),
-          const Text(
-            'Lütfen kelimeni aklında tut ve ekranı kimseye gösterme.',
+          Text(
+            isWhiteCard
+                ? 'Kelimen yok! Çaktırmadan diğerlerini dinle.'
+                : 'Kelimeni aklında tut ve ekranı kimseye gösterme.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,
-              color: Color(0xFFFFB7B2), // Pastel somon uyarı
+              color: Theme.of(context).colorScheme.error,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 25),
+          const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF77DD77), // Pastel yeşil buton
-                padding: const EdgeInsets.symmetric(vertical: 15),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 elevation: 0,
               ),
               onPressed: onConfirm,
-              child: const Text(
-                'Anladım, Gizle',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Text(
+                'ANLADIM, GİZLE',
+                style: GoogleFonts.bungee(fontSize: 16),
               ),
             ),
           ),

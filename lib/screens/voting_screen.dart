@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../state/game_provider.dart';
+import '../widgets/rules_drawer.dart';
 
-/// VOTING fazı: sadece activeOrder'daki (elenmemiş) oyuncular listelenir ve oy kullanır.
 class VotingScreen extends StatelessWidget {
   const VotingScreen({super.key});
 
@@ -16,44 +17,47 @@ class VotingScreen extends StatelessWidget {
     final isVotingComplete = votedCount == total;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F0EB), // Pastel krem arka plan
+      drawer: const RulesDrawer(),
+      appBar: AppBar(
+        title: const Text('OYLAMA'),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Üst Bilgi Barı (Tur & Sayaç Rozetleri)
+              // Sayaç Rozeti
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE8E5DF),
+                      color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      'Tur ${round.roundNumber} • Oylama',
-                      style: const TextStyle(
+                      'Tur ${round.roundNumber}',
+                      style: TextStyle(
                         fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF555555),
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFB7B2).withValues(alpha: 0.35), // Pastel somon rozet
+                      color: Theme.of(context).colorScheme.error.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       'Oy: $votedCount / $total',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF8C5363),
+                      style: GoogleFonts.bungee(
+                        fontSize: 13,
+                        color: Theme.of(context).colorScheme.error,
                       ),
                     ),
                   ),
@@ -61,20 +65,19 @@ class VotingScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Çoklu Casus / Ara Eleme Bildirim Kartı
               if (round.eliminatedPlayerIds.isNotEmpty)
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFD1DC).withValues(alpha: 0.5), // Pastel pembe
+                    color: Theme.of(context).colorScheme.error.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFFFD1DC)),
+                    border: Border.all(color: Theme.of(context).colorScheme.error),
                   ),
                   child: Row(
                     children: [
-                      const Text('⚠️', style: TextStyle(fontSize: 18)),
+                      const Icon(Icons.warning_amber_rounded, color: Colors.amber),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -82,7 +85,7 @@ class VotingScreen extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF8C5363),
+                            color: Colors.white70,
                           ),
                         ),
                       ),
@@ -90,23 +93,20 @@ class VotingScreen extends StatelessWidget {
                   ),
                 ),
 
-              // Başlık ve Açıklama Alanı
-              const Text(
-                'Şüpheliyi Seçin',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF2C3E50),
+              Text(
+                'ŞÜPHELİYİ SEÇİN',
+                style: GoogleFonts.bungee(
+                  fontSize: 22,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 4),
               const Text(
-                'Kimin casus olduğunu düşünüyorsanız üzerine dokunarak oy verin.',
-                style: TextStyle(fontSize: 13, color: Color(0xFF7F8C8D)),
+                'Casus olduğunu düşündüğünüz oyuncuya dokunarak oy verin.',
+                style: TextStyle(fontSize: 13, color: Colors.white60),
               ),
               const SizedBox(height: 16),
 
-              // Aday Oyuncu Listesi
               Expanded(
                 child: ListView.separated(
                   itemCount: round.activeOrder.length,
@@ -120,33 +120,26 @@ class VotingScreen extends StatelessWidget {
 
                     return Container(
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFDFBF7), // Pastel kart rengi
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: votesForCandidate > 0
-                              ? const Color(0xFFAEC6CF) // Oy almışsa pastel mavi çerçeve
-                              : const Color(0xFFE8E5DF),
-                          width: votesForCandidate > 0 ? 1.5 : 1,
+                              ? Theme.of(context).colorScheme.error
+                              : Theme.of(context).colorScheme.surface,
+                          width: votesForCandidate > 0 ? 2 : 1,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.02),
-                            offset: const Offset(0, 3),
-                            blurRadius: 8,
-                          ),
-                        ],
                       ),
                       child: ListTile(
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                         leading: CircleAvatar(
-                          backgroundColor: const Color(0xFFDCD0FF), // Pastel lila avatar
+                          backgroundColor: Theme.of(context).colorScheme.primary,
                           child: Text(
                             candidate.name.isNotEmpty
                                 ? candidate.name[0].toUpperCase()
                                 : '?',
                             style: const TextStyle(
-                              color: Color(0xFF4A3E72),
+                              color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -155,8 +148,8 @@ class VotingScreen extends StatelessWidget {
                           candidate.name,
                           style: const TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF2C3E50),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         trailing: votesForCandidate > 0
@@ -164,20 +157,18 @@ class VotingScreen extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFAEC6CF), // Pastel mavi oy rozeti
+                                  color: Theme.of(context).colorScheme.error,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
-                                  '$votesForCandidate oy',
-                                  style: const TextStyle(
-                                    color: Color(0xFF1B3B4B),
+                                  '$votesForCandidate OY',
+                                  style: GoogleFonts.bungee(
+                                    color: Colors.white,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               )
-                            : const Icon(Icons.chevron_right,
-                                color: Color(0xFFBDC3C7)),
+                            : const Icon(Icons.chevron_right, color: Colors.white30),
                         onTap: () => _castVote(context, provider, candidateId),
                       ),
                     );
@@ -185,28 +176,24 @@ class VotingScreen extends StatelessWidget {
                 ),
               ),
 
-              // Tüm Oylar Verildiğinde Çıkan İlerleme Butonu
               if (isVotingComplete)
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.only(top: 12),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF77DD77), // Pastel yeşil
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       elevation: 0,
                     ),
                     onPressed: () => provider.resolveVotingResult(),
-                    child: const Text(
-                      'Oylamayı Tamamla • Kartı Aç',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Text(
+                      'OYLAMAYI BİTİR • KARTI AÇ',
+                      style: GoogleFonts.bungee(fontSize: 15),
                     ),
                   ),
                 ),
@@ -228,9 +215,10 @@ class VotingScreen extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
         padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-          color: Color(0xFFFDFBF7),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -242,23 +230,22 @@ class VotingScreen extends StatelessWidget {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE8E5DF),
+                  color: Colors.white24,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
-            const Text(
-              'Kim oy kullanıyor?',
-              style: TextStyle(
+            Text(
+              'KİM OY KULLANIYOR?',
+              style: GoogleFonts.bungee(
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF2C3E50),
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(height: 6),
             const Text(
-              'Kendi isminize dokunarak oyunuzu kaydedin.',
-              style: TextStyle(fontSize: 13, color: Color(0xFF7F8C8D)),
+              'Kendi isminize dokunarak oyunuzu onaylayın.',
+              style: TextStyle(fontSize: 13, color: Colors.white70),
             ),
             const SizedBox(height: 16),
             ListView.separated(
@@ -268,20 +255,14 @@ class VotingScreen extends StatelessWidget {
               separatorBuilder: (_, __) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final voterId = remainingVoters[index];
-                final voter =
-                    provider.players.firstWhere((p) => p.id == voterId);
+                final voter = provider.players.firstWhere((p) => p.id == voterId);
                 return ListTile(
-                  tileColor: const Color(0xFFF2F0EB),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  leading: const Icon(Icons.how_to_vote,
-                      color: Color(0xFFB19CD9)), // Pastel lila ikon
+                  tileColor: const Color(0xFF1A1A24),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  leading: Icon(Icons.how_to_vote, color: Theme.of(context).colorScheme.secondary),
                   title: Text(
                     voter.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF2C3E50),
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
                   ),
                   onTap: () {
                     Navigator.pop(context);

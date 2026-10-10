@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../state/game_provider.dart';
+import '../engine/spy_distribution.dart';
 import 'word_pack_manager_screen.dart';
 import 'game_flow_screen.dart';
+import '../widgets/rules_drawer.dart';
 
 class SetupScreen extends StatefulWidget {
   const SetupScreen({super.key});
@@ -36,7 +38,10 @@ class _SetupScreenState extends State<SetupScreen> {
     final hasEnoughPlayers = playerCount >= 3;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F0EB), // Pastel krem arka plan
+      drawer: const RulesDrawer(),
+      appBar: AppBar(
+        title: const Text('Casus Oyunu'),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -50,23 +55,22 @@ class _SetupScreenState extends State<SetupScreen> {
                   const Text(
                     'Oyun Kurulumu',
                     style: TextStyle(
-                      fontSize: 26,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF2C3E50),
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFAEC6CF).withValues(alpha: 0.35), // Pastel mavi rozet
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
                       '$playerCount Oyuncu',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1B3B4B),
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ),
@@ -78,26 +82,16 @@ class _SetupScreenState extends State<SetupScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFDFBF7),
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: const Color(0xFFE8E5DF)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.02),
-                      offset: const Offset(0, 3),
-                      blurRadius: 8,
-                    ),
-                  ],
                 ),
                 child: Row(
                   children: [
                     Expanded(
                       child: TextField(
                         controller: _nameController,
-                        style: const TextStyle(color: Color(0xFF2C3E50)),
                         decoration: InputDecoration(
                           hintText: 'Oyuncu adı yazın...',
-                          hintStyle: const TextStyle(color: Color(0xFF95A5A6), fontSize: 15),
                           errorText: _error,
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -107,7 +101,8 @@ class _SetupScreenState extends State<SetupScreen> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFB19CD9), // Pastel lila
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
@@ -117,7 +112,7 @@ class _SetupScreenState extends State<SetupScreen> {
                       onPressed: () => _addPlayer(provider),
                       child: const Text(
                         'Ekle',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
@@ -142,18 +137,17 @@ class _SetupScreenState extends State<SetupScreen> {
                           final player = provider.players[index];
                           return Container(
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFDFBF7),
+                              color: Theme.of(context).colorScheme.surface,
                               borderRadius: BorderRadius.circular(14),
-                              border: Border.all(color: const Color(0xFFE8E5DF)),
                             ),
                             child: ListTile(
                               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
                               leading: CircleAvatar(
-                                backgroundColor: const Color(0xFFFFD1DC), // Pastel pembe avatar
+                                backgroundColor: Theme.of(context).colorScheme.secondary,
                                 child: Text(
                                   '${index + 1}',
                                   style: const TextStyle(
-                                    color: Color(0xFF8C5363),
+                                    color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -163,11 +157,10 @@ class _SetupScreenState extends State<SetupScreen> {
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF2C3E50),
                                 ),
                               ),
                               trailing: IconButton(
-                                icon: const Icon(Icons.close_rounded, color: Color(0xFFFFB7B2)),
+                                icon: Icon(Icons.close_rounded, color: Theme.of(context).colorScheme.error),
                                 onPressed: () => provider.removePlayer(player.id),
                               ),
                             ),
@@ -182,8 +175,8 @@ class _SetupScreenState extends State<SetupScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
                   color: hasEnoughPlayers
-                      ? const Color(0xFFE8E5DF).withValues(alpha: 0.5)
-                      : const Color(0xFFFFD1DC).withValues(alpha: 0.4),
+                      ? Theme.of(context).colorScheme.surface
+                      : Theme.of(context).colorScheme.error.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -191,7 +184,9 @@ class _SetupScreenState extends State<SetupScreen> {
                     Icon(
                       hasEnoughPlayers ? Icons.info_outline : Icons.warning_amber_rounded,
                       size: 18,
-                      color: hasEnoughPlayers ? const Color(0xFF555555) : const Color(0xFF8C5363),
+                      color: hasEnoughPlayers
+                          ? Theme.of(context).colorScheme.secondary
+                          : Theme.of(context).colorScheme.error,
                     ),
                     const SizedBox(width: 8),
                     Expanded(
@@ -202,7 +197,7 @@ class _SetupScreenState extends State<SetupScreen> {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: hasEnoughPlayers ? const Color(0xFF555555) : const Color(0xFF8C5363),
+                          color: hasEnoughPlayers ? Colors.white70 : Theme.of(context).colorScheme.error,
                         ),
                       ),
                     ),
@@ -213,28 +208,64 @@ class _SetupScreenState extends State<SetupScreen> {
               // Kelime Paketleri Butonu
               OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFDFBF7),
-                  side: const BorderSide(color: Color(0xFFE8E5DF)),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  side: BorderSide(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
-                icon: const Icon(Icons.library_books_rounded, color: Color(0xFF4A3E72), size: 20),
+                icon: Icon(Icons.library_books_rounded, color: Theme.of(context).colorScheme.primary, size: 20),
                 label: Text(
                   'Kelime Paketleri (${provider.selectedPackIds.length} seçili)',
-                  style: const TextStyle(color: Color(0xFF2C3E50), fontWeight: FontWeight.w600),
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                 ),
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const WordPackManagerScreen()),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
+
+              // Casus Modu Seçimi (SegmentedButton)
+              SegmentedButton<SpyModePreference>(
+                segments: const [
+                  ButtonSegment(
+                    value: SpyModePreference.blackOnly,
+                    label: Text('Siyah Kart', style: TextStyle(fontSize: 12)),
+                  ),
+                  ButtonSegment(
+                    value: SpyModePreference.whiteOnly,
+                    label: Text('Beyaz Kart', style: TextStyle(fontSize: 12)),
+                  ),
+                  ButtonSegment(
+                    value: SpyModePreference.random,
+                    label: Text('Karışık', style: TextStyle(fontSize: 12)),
+                  ),
+                ],
+                selected: {provider.selectedSpyMode},
+                onSelectionChanged: (Set<SpyModePreference> newSelection) {
+                  provider.setSpyMode(newSelection.first);
+                },
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                    (Set<WidgetState> states) {
+                      if (states.contains(WidgetState.selected)) {
+                        return Theme.of(context).colorScheme.error;
+                      }
+                      return Theme.of(context).colorScheme.surface;
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
 
               // Oyunu Başlat Butonu
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: hasEnoughPlayers ? const Color(0xFF77DD77) : Colors.grey.shade400,
+                  backgroundColor: hasEnoughPlayers
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.grey.shade700,
+                  foregroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   elevation: 0,
                 ),
                 onPressed: hasEnoughPlayers
@@ -244,7 +275,7 @@ class _SetupScreenState extends State<SetupScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(error),
-                              backgroundColor: const Color(0xFFFFB7B2),
+                              backgroundColor: Theme.of(context).colorScheme.error,
                             ),
                           );
                           return;
@@ -256,7 +287,7 @@ class _SetupScreenState extends State<SetupScreen> {
                     : null,
                 child: const Text(
                   'OYUNU BAŞLAT',
-                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(height: 8),

@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,6 +22,19 @@ class GameProvider extends ChangeNotifier {
   GameSettings? _settings;
   SharedPreferences? _prefs;
 
+  // --- 1) Casus Modu Seçimi (Default: Siyah Kart) ---
+  SpyModePreference _selectedSpyMode = SpyModePreference.blackOnly;
+  SpyModePreference get selectedSpyMode => _selectedSpyMode;
+
+  void setSpyMode(SpyModePreference mode) {
+    _selectedSpyMode = mode;
+    notifyListeners();
+  }
+
+  // --- 2) Tartışma Aşaması Ek Tur Durumu ---
+  bool _isDiscussionRoundComplete = false;
+  bool get isDiscussionRoundComplete => _isDiscussionRoundComplete;
+
   GameProvider() {
     _builtinPack = buildBuiltinWordPack();
     _selectedPackIds.add(_builtinPack.id);
@@ -46,7 +57,7 @@ class GameProvider extends ChangeNotifier {
       final player = createPlayer(name);
       _players.add(player);
       notifyListeners();
-      return null; // hata yok
+      return null;
     } on ArgumentError catch (e) {
       return e.message.toString();
     }
@@ -146,10 +157,7 @@ class GameProvider extends ChangeNotifier {
         _selectedPackIds.add(map['id'] as String);
       }
       notifyListeners();
-    } catch (_) {
-      // Bozuk/geçersiz veri varsa sessizce yok say — oyun dahili kütüphane
-      // ile çalışmaya devam edebilir.
-    }
+    } catch (_) {}
   }
 
   Future<void> _persistCustomPacks() async {
@@ -187,7 +195,6 @@ class GameProvider extends ChangeNotifier {
     }
   }
 
-  /// %30 casus tavanına göre bu oyuncu sayısı için maksimum casus sayısı.
   int maxSpyCountForCurrentPlayers() {
     if (_players.length < minPlayers) return 0;
     return getMaxSpyCount(_players.length);
@@ -205,6 +212,7 @@ class GameProvider extends ChangeNotifier {
       selectedPackIds: _selectedPackIds.toList(),
     );
     _engine = GameEngine(_players, _settings!, _buildPool());
+    _isDiscussionRoundComplete = false;
     notifyListeners();
     return null;
   }
@@ -213,8 +221,9 @@ class GameProvider extends ChangeNotifier {
     return buildUnifiedWordPool(allPacks, _selectedPackIds.toList());
   }
 
-  RoundState startNewRound({SpyModePreference preference = SpyModePreference.random}) {
-    final round = _engine!.startNewRound(spyPreference: preference);
+  RoundState startNewRound() {
+    _isDiscussionRoundComplete = false;
+    final round = _engine!.startNewRound(spyPreference: _selectedSpyMode);
     notifyListeners();
     return round;
   }
@@ -224,7 +233,34 @@ class GameProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Tartışma sırasında sırayı ilerletir. Son konuşmacı konuşunca oylamaya hemen geçmez!
   void advanceDiscussionTurn() {
+    final round = currentRound;
+    if (round == null || _engine == null) return;
+
+    if (round.currentTurnIndex >= round.activeOrder.length - 1) {
+      _isDiscussionRoundComplete = true;
+      notifyListeners();
+    } else {
+      _engine!.advanceDiscussionTurn();
+      notifyListeners();
+    }
+  }
+
+  // 1 Tur Daha Konuş: Sırayı baştan başlatır
+  void restartDiscussionTurn() {
+    final round = currentRound;
+    if (round == null) return;
+    round.currentTurnIndex = 0;
+    _isDiscussionRoundComplete = false;
+    notifyListeners();
+  }
+
+  // Oylamaya Geç: State machine'i VOTING fazına geçirir
+  void proceedToVoting() {
+    final round = currentRound;
+    if (round == null || _engine == null) return;
+    _isDiscussionRoundComplete = false;
     _engine!.advanceDiscussionTurn();
     notifyListeners();
   }
@@ -246,10 +282,10 @@ class GameProvider extends ChangeNotifier {
 
   void finishRound() {
     _engine!.finishRound();
+    _isDiscussionRoundComplete = false;
     notifyListeners();
   }
 
-  /// Skor tablosu için oyuncuları puana göre azalan sırada döner.
   List<Player> playersByScoreDesc() {
     final sorted = List<Player>.from(_players);
     sorted.sort((a, b) => b.score - a.score);
@@ -259,6 +295,7 @@ class GameProvider extends ChangeNotifier {
   void resetGame() {
     _engine = null;
     _settings = null;
+    _isDiscussionRoundComplete = false;
     for (final p in _players) {
       p.score = 0;
     }

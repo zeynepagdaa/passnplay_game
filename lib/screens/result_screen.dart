@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../models/game_state.dart';
 import '../state/game_provider.dart';
-import '../engine/spy_distribution.dart';
 
 class ResultScreen extends StatelessWidget {
   const ResultScreen({super.key});
@@ -13,24 +13,20 @@ class ResultScreen extends StatelessWidget {
     final provider = context.watch<GameProvider>();
     final round = provider.currentRound!;
 
-    // Kazanan durumuna göre metinler, pastel renkler ve emojiler
-    final (title, bannerColor, badgeColor, emoji) = switch (round.winner!) {
+    final (title, accentColor, emoji) = switch (round.winner!) {
       RoundWinner.innocents => (
-          'Masumlar Kazandı!',
-          const Color(0xFFE8F5E9), // Pastel açık yeşil
-          const Color(0xFF77DD77), // Pastel yeşil
-          '🕵️️',
+          'MASUMLAR KAZANDI!',
+          Theme.of(context).colorScheme.primary, // Elektrik mavisi
+          '🛡️',
         ),
       RoundWinner.spies => (
-          'Casuslar Kazandı!',
-          const Color(0xFFFFEBEE), // Pastel açık kırmızı
-          const Color(0xFFFFB7B2), // Pastel somon
+          'CASUSLAR KAZANDI!',
+          Theme.of(context).colorScheme.error, // Fuşya
           '🎭',
         ),
       RoundWinner.whiteCardSolo => (
-          'Beyaz Kart Kazandı!',
-          const Color(0xFFEDE7F6), // Pastel açık mor
-          const Color(0xFFB19CD9), // Pastel lila
+          'BEYAZ KART KAZANDI!',
+          Theme.of(context).colorScheme.secondary, // Neon Sarı
           '⚪',
         ),
     };
@@ -43,47 +39,23 @@ class ResultScreen extends StatelessWidget {
         : '';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F0EB), // Pastel krem arka plan
+      appBar: AppBar(
+        title: Text('TUR ${round.roundNumber} TAMAMLANDI'),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Üst Tur Başlığı Rozeti
-              Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE8E5DF),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    'Tur ${round.roundNumber} Tamamlandı',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF555555),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              // Kazanan İlan Kartı (Banner)
+              // Kazanan İlan Kartı
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
                 decoration: BoxDecoration(
-                  color: bannerColor,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: badgeColor.withValues(alpha: 0.5)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.02),
-                      offset: const Offset(0, 4),
-                      blurRadius: 10,
-                    ),
-                  ],
+                  border: Border.all(color: accentColor, width: 2),
                 ),
                 child: Column(
                   children: [
@@ -91,22 +63,21 @@ class ResultScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: GoogleFonts.bungee(
                         fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF2C3E50),
+                        color: accentColor,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     if (isWhiteCardSolo) ...[
                       const SizedBox(height: 6),
                       Text(
-                        '$whiteGuesserName ana kelimeyi doğru tahmin ederek turu tek başına kazandı!',
+                        '$whiteGuesserName ana kelimeyi tahmin ederek turu tek başına kazandı!',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
-                          color: Color(0xFF6A5ACD),
-                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -115,13 +86,12 @@ class ResultScreen extends StatelessWidget {
               ),
               const SizedBox(height: 14),
 
-              // Turun Kelimeleri Karşılaştırma Kutusu
+              // Kelimelerin Açıklanması
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFDFBF7),
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFE8E5DF)),
                 ),
                 child: Row(
                   children: [
@@ -132,19 +102,18 @@ class ResultScreen extends StatelessWidget {
                           const Text(
                             'ANA KELİME',
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 11,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1.2,
-                              color: Color(0xFF95A5A6),
+                              color: Colors.white54,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             round.wordPair.mainWord,
-                            style: const TextStyle(
+                            style: GoogleFonts.bungee(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF2C3E50),
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         ],
@@ -153,7 +122,7 @@ class ResultScreen extends StatelessWidget {
                     Container(
                       width: 1,
                       height: 32,
-                      color: const Color(0xFFE8E5DF),
+                      color: Colors.white24,
                       margin: const EdgeInsets.symmetric(horizontal: 12),
                     ),
                     Expanded(
@@ -163,19 +132,18 @@ class ResultScreen extends StatelessWidget {
                           const Text(
                             'SİYAH KELİME',
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 11,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1.2,
-                              color: Color(0xFF95A5A6),
+                              color: Colors.white54,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             round.wordPair.spyWord,
-                            style: const TextStyle(
+                            style: GoogleFonts.bungee(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF2C3E50),
+                              color: Theme.of(context).colorScheme.error,
                             ),
                           ),
                         ],
@@ -186,18 +154,16 @@ class ResultScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Skor Tablosu Başlığı
-              const Text(
-                'Lider Tablosu',
-                style: TextStyle(
+              Text(
+                'LİDER TABLOSU',
+                style: GoogleFonts.bungee(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF2C3E50),
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 8),
 
-              // Sıralı Oyuncu Listesi (Skora göre azalan)
+              // Sıralı Oyuncu Listesi
               Expanded(
                 child: ListView.separated(
                   itemCount: provider.playersByScoreDesc().length,
@@ -209,26 +175,25 @@ class ResultScreen extends StatelessWidget {
                     return Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFDFBF7),
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
                           color: isLeader
-                              ? const Color(0xFFAEC6CF)
-                              : const Color(0xFFE8E5DF),
-                          width: isLeader ? 1.5 : 1,
+                              ? Theme.of(context).colorScheme.secondary
+                              : Colors.transparent,
+                          width: isLeader ? 1.5 : 0,
                         ),
                       ),
                       child: Row(
                         children: [
-                          // Sıralama Numarası veya Kupa
                           Container(
                             width: 32,
                             height: 32,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: isLeader
-                                  ? const Color(0xFFFFD1DC) // Lider için pastel pembe
-                                  : const Color(0xFFE8E5DF).withValues(alpha: 0.5),
+                                  ? Theme.of(context).colorScheme.secondary
+                                  : const Color(0xFF1A1A24),
                               shape: BoxShape.circle,
                             ),
                             child: Text(
@@ -236,38 +201,32 @@ class ResultScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: isLeader ? 14 : 12,
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFF4A3E72),
+                                color: isLeader ? Colors.black : Colors.white70,
                               ),
                             ),
                           ),
                           const SizedBox(width: 12),
-
-                          // Oyuncu Adı
                           Expanded(
                             child: Text(
                               p.name,
                               style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF2C3E50),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
                             ),
                           ),
-
-                          // Puan Rozeti
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF2F0EB),
+                              color: const Color(0xFF1A1A24),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
                               '${p.score} P',
-                              style: const TextStyle(
+                              style: GoogleFonts.bungee(
                                 fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF2C3E50),
+                                color: Theme.of(context).colorScheme.secondary,
                               ),
                             ),
                           ),
@@ -278,29 +237,26 @@ class ResultScreen extends StatelessWidget {
                 ),
               ),
 
-              // Sonraki Tura Geç Butonu
+              // Sonraki Tura Geç Butonu (Kullanıcının belirlediği modu koruyarak startNewRound çağrılır)
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF77DD77), // Pastel yeşil
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     elevation: 0,
                   ),
                   onPressed: () {
                     provider.finishRound();
-                    provider.startNewRound(preference: SpyModePreference.random);
+                    provider.startNewRound(); // Setup'ta seçilen modu korur
                   },
-                  child: const Text(
-                    'Sonraki Tur',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Text(
+                    'SONRAKİ TUR',
+                    style: GoogleFonts.bungee(fontSize: 16),
                   ),
                 ),
               ),
